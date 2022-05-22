@@ -22,13 +22,11 @@ def test_get_content(mock_get, web_parser):
 
 @patch("parser.web_parser.get")
 def test_get_content_silence_exception(mock_get, web_parser):
-    expected = None
-    
     mock_get.side_effect = ConnectionError()
-    
+
     result = web_parser.get_content()
 
-    assert result == expected
+    assert result is None
 
 
 @pytest.mark.parametrize(
