@@ -31,8 +31,7 @@ class NewsProducer:
     def get_news_stream(self, proxies):
         news_feed_items = self._extract_news_feed_items(proxies)
         for entry in news_feed_items:
-            formatted_entry = self.formatter.format_entry(entry)
-            yield formatted_entry
+            yield self.formatter.format_entry(entry)
 
 
 class NewsFormatter:
@@ -61,13 +60,10 @@ class NewsFormatter:
         return date.strftime(self.date_format)
 
     def assign_author(self, author):
-        return self.default_author if not author else author
+        return author or self.default_author
 
     def format_description(self, entry):
         tmp_description = re.sub("<.*?>", "", entry.description[:1000])
         index = tmp_description.rfind(".")
         short_description = tmp_description[:index+1]
-        return (
-            short_description if short_description
-            else entry.title
-        )
+        return short_description or entry.title
